@@ -7,12 +7,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping
-public class Intro {
+public class Activities {
     private final HelloService helSer;
+    private final OperationsService oper;
 
-    public Intro(HelloService helSer){
+    //Конструктор
+    public Activities(HelloService helSer, OperationsService oper){
         this.helSer = helSer;
+        this.oper = oper;
     }
+
 
     //Стартовый экран - ПРИВЕТСТВИЕ
     @GetMapping
@@ -25,4 +29,13 @@ public class Intro {
     public String HelCalculator(){
         return helSer.HelCalculator();
     }
+
+
+    //Операции
+    //Сложение
+    @GetMapping(path = "/calculator/plus")
+    public String Plus(@RequestParam("num1") int num1, @RequestParam("num2") int num2){
+        return oper.Plus(num1, num2);
+    }
+
 }
