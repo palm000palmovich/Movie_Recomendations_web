@@ -2,19 +2,16 @@ package Calculator;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping
-public class Activities {
+public class IntroController {
     private final HelloService helSer;
-    private final OperationsService oper;
 
     //Конструктор
-    public Activities(HelloService helSer, OperationsService oper){
+    public IntroController(HelloService helSer){
         this.helSer = helSer;
-        this.oper = oper;
     }
 
 
@@ -30,12 +27,5 @@ public class Activities {
         return helSer.HelCalculator();
     }
 
-
-    //Операции
-    //Сложение
-    @GetMapping(path = "/calculator/plus")
-    public String Plus(@RequestParam("num1") int num1, @RequestParam("num2") int num2){
-        return oper.Plus(num1, num2);
-    }
 
 }
