@@ -12,16 +12,41 @@ public class EmployeeService {
 
 
     //Добавление сотрудников
-    public String addEmployee(int id, String firstN, String secondN){
-        if (employees.size() < maxCount){
-            Employee dude = new Employee(id, firstN, secondN);
-            employees.add(dude);
-            return "Вы успешно добавили сотрудника!";
-        }  return "Места нет!";
+    public String addEmployee(int id, String firstN, String secondN) throws EmployeeStorageIsFullException,
+            EmployeeAlreadyAddedException {
+        Employee dude = new Employee(id, firstN, secondN);
+        if (employees.size() < maxCount) {
+            if (!employees.contains(dude)) {
+                employees.add(dude);
+                return "Вы успешно добавили сотрудника!";
+            } else {
+                throw new EmployeeAlreadyAddedException("Сотрудник уже есть");
+            }
+        } else {
+            throw new EmployeeStorageIsFullException("Не хватает места!");
+        }
     }
 
-    //Вывод сотрудников
-    public List<Employee> allEmployee(){
-        return employees;
+    //Поиск сотрудников
+    public Employee findEmployee(int id) {
+        Employee chel = new Employee(0,null,null);
+        for (int i = 0; i <= employees.size(); i++){
+            if (employees.get(i).getId() == id){
+                chel = employees.get(i);
+                return chel;
+            }
+        } return chel;
+
+    }
+
+
+    //Все сотрудники
+    public List<Employee> allEmployees() {
+        if (employees.size() != 0){
+            return employees;
+        }else {
+            throw new DataBaseOfEmployeesIsEmpty("База данных пуста!");
+        }
+
     }
 }
