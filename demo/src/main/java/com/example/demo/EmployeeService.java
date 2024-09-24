@@ -28,25 +28,37 @@ public class EmployeeService {
     }
 
     //Поиск сотрудников
-    public Employee findEmployee(int id) {
-        Employee chel = new Employee(0,null,null);
-        for (int i = 0; i <= employees.size(); i++){
-            if (employees.get(i).getId() == id){
-                chel = employees.get(i);
-                return chel;
-            }
-        } return chel;
-
+    public Employee findEmployee(int id, String firstN, String secondN) throws EmployeeNotFoundException{
+        Employee chel = new Employee(id, firstN, secondN);
+        if (employees.contains(chel)) {
+            return chel;
+        } else{
+            throw new EmployeeNotFoundException("Нет такого пользователя!");
+        }
     }
+
 
 
     //Все сотрудники
     public List<Employee> allEmployees() {
-        if (employees.size() != 0){
+        if (employees.size() != 0) {
             return employees;
-        }else {
+        } else {
             throw new DataBaseOfEmployeesIsEmpty("База данных пуста!");
         }
 
     }
+
+    //удаление сотрудника
+    public String removeEmployee(int id, String firstN, String secondN) throws EmployeeNotFoundException {
+        Employee dude = new Employee(id, firstN, secondN);
+        if (employees.contains(dude)){
+            employees.remove(dude);
+            return "Сотрудник успешно удален!";
+        } else{
+            throw new EmployeeNotFoundException("Такого сотрудника нет в базе.");
+        }
+
+    }
+
 }

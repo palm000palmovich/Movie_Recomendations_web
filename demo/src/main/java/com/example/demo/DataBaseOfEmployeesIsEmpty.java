@@ -5,4 +5,5 @@ public class DataBaseOfEmployeesIsEmpty extends RuntimeException{
         super(message);
     }
 
+
 }

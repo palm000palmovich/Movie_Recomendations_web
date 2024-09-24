@@ -33,10 +33,17 @@ public class EmployeeController {
         }
     }
 
-    //Обработка запроса на вывод сотрудников
+    //Обработка запроса на поиск сотрудников
     @GetMapping(path = "/find")
-    public Employee find(@RequestParam("id") int id){
-        return empl.findEmployee(id);
+    public Employee find(@RequestParam("id") int id,
+                         @RequestParam("firstName") String firstN,
+                         @RequestParam("secondName") String secondN){
+        Employee dude = new Employee(0, "Employee", "Not found!");
+        try{
+            return empl.findEmployee(id,firstN,secondN);
+        } catch (EmployeeNotFoundException e){
+            return dude;
+        }
     }
 
     //Вывод всех сотрудников
@@ -51,6 +58,19 @@ public class EmployeeController {
             return empl.allEmployees();
         } catch (DataBaseOfEmployeesIsEmpty e){
             return exception;
+        }
+
+    }
+
+    //Удаление сотрудника
+    @GetMapping(path = "/remove")
+    public String remove(@RequestParam("id") int id,
+                         @RequestParam("firstName") String firstN,
+                         @RequestParam("secondName") String secondN){
+        try{
+            return empl.removeEmployee(id,firstN,secondN);
+        } catch (EmployeeNotFoundException e){
+            return "Такого сотрудника нет в базе.";
         }
 
     }
