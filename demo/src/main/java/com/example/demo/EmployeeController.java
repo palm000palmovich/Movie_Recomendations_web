@@ -68,7 +68,8 @@ public class EmployeeController {
                          @RequestParam("firstName") String firstN,
                          @RequestParam("secondName") String secondN){
         try{
-            return empl.removeEmployee(id,firstN,secondN);
+            return
+                    empl.removeEmployee(id,firstN,secondN);
         } catch (EmployeeNotFoundException e){
             return "Такого сотрудника нет в базе.";
         }
