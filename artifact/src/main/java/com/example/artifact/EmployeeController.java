@@ -20,6 +20,29 @@ public class EmployeeController {
                       @RequestParam("fio") String fio,
                       @RequestParam("department") int department,
                       @RequestParam("salary") int salary){
-        return emSer.addEmployee(id, fio, department, salary).toString();
+        try {
+            return emSer.addEmployee(id, fio, department, salary).toString();
+        } catch (EmployeeAlreadyAddedException e){
+            return "Этот сотрудник уже добавлен!";
+        }
     }
+
+    @GetMapping(path = "/all")
+    public String all(){
+        try {
+            return emSer.allEmployees();
+        } catch (DataOfEnployeesIsEmpty e){
+            return "База данных пуста!";
+        }
+    }
+
+    @GetMapping(path = "/remove")
+    public String remove(@RequestParam("fio") String fio){
+        try{
+            return emSer.removeEmployee(fio);
+        } catch (EmployeeIsNotInTheDataBase e){
+            return "Такого сотрудника нет в базе данных!";
+        }
+    }
+
 }

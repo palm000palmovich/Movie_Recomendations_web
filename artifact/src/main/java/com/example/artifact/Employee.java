@@ -70,7 +70,7 @@ public class Employee {
         return "id= " + id +
                 ", fio= " + fio +
                 ", department= " + department +
-                ", salary= " + salary;
+                ", salary= " + salary + "       ";
     }
 
 }
