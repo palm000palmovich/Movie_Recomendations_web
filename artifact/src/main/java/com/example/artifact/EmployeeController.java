@@ -1,9 +1,7 @@
 package com.example.artifact;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/employees")
@@ -15,6 +13,8 @@ public class EmployeeController {
     }
 
 
+
+    //Добавление сотрудника
     @GetMapping(path = "/add")
     public String add(@RequestParam("id") int id,
                       @RequestParam("fio") String fio,
@@ -27,15 +27,27 @@ public class EmployeeController {
         }
     }
 
+    //Все сотудники
     @GetMapping(path = "/all")
-    public String all(){
+    public String all() {
         try {
             return emSer.allEmployees();
-        } catch (DataOfEnployeesIsEmpty e){
+        } catch (DataOfEnployeesIsEmpty e) {
             return "База данных пуста!";
         }
     }
-
+    //Сотрудники по отделу
+    @GetMapping(path = "/allDep")
+    public String allDep(@RequestParam("departmentId") String depId){
+        try{
+            return emSer.employeesInDepartment(depId);
+        } catch (ThereIsNoSuchDepartment e){
+            return "Сотрудника с таким отделом нет!";
+        } catch (DataOfEnployeesIsEmpty e){
+            return "База сотрудников пуста!";
+        }
+    }
+    //Удаление сотрудника
     @GetMapping(path = "/remove")
     public String remove(@RequestParam("fio") String fio){
         try{
@@ -45,4 +57,27 @@ public class EmployeeController {
         }
     }
 
+    //Минимальная зп в отделе
+    @GetMapping(path = "/min-salary")
+    public String minSal(@RequestParam("departmentId") int depId){
+        try{
+            return emSer.minSalaryInDep(depId);
+        } catch (DataOfEnployeesIsEmpty e){
+            return "База сотрудников пуста!";
+        } catch (ThereIsNoSuchDepartment e){
+            return "Нет такого отдела!";
+        }
+    }
+
+    //Максимальная зп в отделе
+    @GetMapping(path = "/max-salary")
+    public String maxSal(@RequestParam("departmentId") int depId){
+        try{
+            return emSer.maxSalInDep(depId);
+        } catch (DataOfEnployeesIsEmpty e){
+            return "База сотрудников пуста!";
+        } catch (ThereIsNoSuchDepartment e){
+            return "Нет такого отдела!";
+        }
+    }
 }

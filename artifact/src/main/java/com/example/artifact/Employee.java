@@ -72,5 +72,4 @@ public class Employee {
                 ", department= " + department +
                 ", salary= " + salary + "       ";
     }
-
 }
