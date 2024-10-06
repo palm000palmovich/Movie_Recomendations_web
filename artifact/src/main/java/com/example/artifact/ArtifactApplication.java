@@ -15,5 +15,4 @@ public class ArtifactApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ArtifactApplication.class, args);
 	}
-
 }

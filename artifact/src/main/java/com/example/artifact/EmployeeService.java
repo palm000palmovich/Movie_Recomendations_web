@@ -102,6 +102,5 @@ public class EmployeeService{
                 .max(Comparator.comparingDouble(Employee::getSalary));
         return minSalEmpl.toString();
     }
-
 }
 

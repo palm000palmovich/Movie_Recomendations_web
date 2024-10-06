@@ -11,9 +11,6 @@ public class EmployeeController {
     public EmployeeController(EmployeeService emSer){
         this.emSer = emSer;
     }
-
-
-
     //Добавление сотрудника
     @GetMapping(path = "/add")
     public String add(@RequestParam("id") int id,
