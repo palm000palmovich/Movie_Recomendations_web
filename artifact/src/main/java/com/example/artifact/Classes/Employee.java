@@ -1,4 +1,4 @@
-package com.example.artifact;
+package com.example.artifact.Classes;
 
 import java.util.Objects;
 

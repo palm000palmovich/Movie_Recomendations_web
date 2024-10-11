@@ -1,5 +1,9 @@
-package com.example.artifact;
+package com.example.artifact.Classes;
 
+import com.example.artifact.Exception.DataOfEnployeesIsEmpty;
+import com.example.artifact.Exception.EmployeeAlreadyAddedException;
+import com.example.artifact.Exception.EmployeeIsNotInTheDataBase;
+import com.example.artifact.Exception.ThereIsNoSuchDepartment;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -10,7 +14,7 @@ public class EmployeeService{
     private List<Employee> employees = new ArrayList<>();
 
     //Добавление сотрудника
-    public String addEmployee(int id, String fio, int department, int salary) throws EmployeeAlreadyAddedException{
+    public String addEmployee(int id, String fio, int department, int salary) throws EmployeeAlreadyAddedException {
         Employee newEmpl = new Employee(id , fio, department, salary);
         if (!employees.contains(newEmpl)){employees.add(newEmpl);} else{
             throw new EmployeeAlreadyAddedException("Этот сотрудник уже есть!");}
@@ -18,28 +22,26 @@ public class EmployeeService{
     }
 
     //Все сотрудники
-    public String allEmployees() throws DataOfEnployeesIsEmpty{
+    public List<Employee> allEmployees() throws DataOfEnployeesIsEmpty {
             if (employees.isEmpty()){
                 throw new DataOfEnployeesIsEmpty("База данных пуста!");
             }
-            String employeesPureDepartment = "";
-            for (int i = 0; i < employees.size(); i++){
-                for (int j = i; j < employees.size(); j++){
-                    if (employees.get(i).getDepartment() == employees.get(j).getDepartment()){
-                        employeesPureDepartment+= "Отдел номер " + employees.get(j).getDepartment() + " " + employees.get(j);
-                    }
-                }
-                employeesPureDepartment+="\t\t\t";
-            }
-            return employeesPureDepartment;
+        List<Employee> employeesPureDepartment = employees.stream()
+                .flatMap(emp1 -> employees.stream()
+                        .filter(emp2 -> emp1.getDepartment() == emp2.getDepartment())
+                        .distinct())
+                .collect(Collectors.toList());
+
+
+
+        return employeesPureDepartment;
     }
 
     //Удаление сотрудника
     public String removeEmployee(String fio1){
-        boolean flag = true;
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getFio().equals(fio1)){flag = true;}
-        }
+        boolean flag = employees.stream()
+                .anyMatch(employee -> employee.getFio().equals(fio1));
+
         if (flag == true){
             List<Employee> updatedEmployees = employees.stream()
                     .filter(e -> !e.getFio().equals(fio1))
@@ -54,12 +56,9 @@ public class EmployeeService{
     public String employeesInDepartment(String depId) throws ThereIsNoSuchDepartment, DataOfEnployeesIsEmpty{
         if (employees.isEmpty()){throw new DataOfEnployeesIsEmpty("База данных пуста!");}
         int dep = Integer.parseInt(depId);
-        boolean flag = false;
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getDepartment() == dep){
-                flag = true;
-            }
-        }
+        boolean flag = employees.stream()
+                .anyMatch(employee -> employee.getId() == dep);
+
         if (flag == false){throw new ThereIsNoSuchDepartment("Такого отдела нет!");}
         List<Employee> emplsInDep = employees.stream()
                 .filter(empl -> empl.getDepartment() == dep)
@@ -68,13 +67,10 @@ public class EmployeeService{
     }
 
     //Сотрудник с минимальной зп в отделе
-    public String minSalaryInDep(int depId) throws ThereIsNoSuchDepartment, DataOfEnployeesIsEmpty{
-        boolean flag = false;
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getDepartment() == depId){
-                flag = true;
-            }
-        }
+    public Optional<Employee> minSalaryInDep(int depId) throws ThereIsNoSuchDepartment, DataOfEnployeesIsEmpty{
+        boolean flag = employees.stream()
+                .anyMatch(employee -> employee.getDepartment() == depId);
+
         if (flag == false){throw new ThereIsNoSuchDepartment("Такого отдела нет!");}
         if (employees.isEmpty()){
             throw new DataOfEnployeesIsEmpty("База сотрудников пуста!");
@@ -82,17 +78,14 @@ public class EmployeeService{
         Optional<Employee> minSalEmpl = employees.stream()
                 .filter(emp -> emp.getDepartment() == depId)
                 .min(Comparator.comparingDouble(Employee::getSalary));
-        return minSalEmpl.toString();
+        return minSalEmpl;
     }
 
     //Сотрудник с максимальной зп в отделе
-    public String maxSalInDep(int depId){
-        boolean flag = false;
-        for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getDepartment() == depId){
-                flag = true;
-            }
-        }
+    public Optional<Employee> maxSalInDep(int depId){
+        boolean flag = employees.stream()
+                .anyMatch(employee -> employee.getDepartment() == depId);
+
         if (flag == false){throw new ThereIsNoSuchDepartment("Такого отдела нет!");}
         if (employees.isEmpty()){
             throw new DataOfEnployeesIsEmpty("База сотрудников пуста!");
@@ -100,7 +93,7 @@ public class EmployeeService{
         Optional<Employee> minSalEmpl = employees.stream()
                 .filter(emp -> emp.getDepartment() == depId)
                 .max(Comparator.comparingDouble(Employee::getSalary));
-        return minSalEmpl.toString();
+        return minSalEmpl;
     }
 }
 

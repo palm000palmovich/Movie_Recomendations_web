@@ -1,6 +1,9 @@
-package com.example.artifact;
+package com.example.artifact.Classes;
 
-import org.springframework.http.ResponseEntity;
+import com.example.artifact.Exception.DataOfEnployeesIsEmpty;
+import com.example.artifact.Exception.EmployeeAlreadyAddedException;
+import com.example.artifact.Exception.EmployeeIsNotInTheDataBase;
+import com.example.artifact.Exception.ThereIsNoSuchDepartment;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,7 +31,7 @@ public class EmployeeController {
     @GetMapping(path = "/all")
     public String all() {
         try {
-            return emSer.allEmployees();
+            return emSer.allEmployees().toString();
         } catch (DataOfEnployeesIsEmpty e) {
             return "База данных пуста!";
         }
@@ -58,7 +61,7 @@ public class EmployeeController {
     @GetMapping(path = "/min-salary")
     public String minSal(@RequestParam("departmentId") int depId){
         try{
-            return emSer.minSalaryInDep(depId);
+            return emSer.minSalaryInDep(depId).toString();
         } catch (DataOfEnployeesIsEmpty e){
             return "База сотрудников пуста!";
         } catch (ThereIsNoSuchDepartment e){
@@ -70,7 +73,7 @@ public class EmployeeController {
     @GetMapping(path = "/max-salary")
     public String maxSal(@RequestParam("departmentId") int depId){
         try{
-            return emSer.maxSalInDep(depId);
+            return emSer.maxSalInDep(depId).toString();
         } catch (DataOfEnployeesIsEmpty e){
             return "База сотрудников пуста!";
         } catch (ThereIsNoSuchDepartment e){

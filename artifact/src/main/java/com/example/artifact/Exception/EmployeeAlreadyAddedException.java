@@ -1,4 +1,4 @@
-package com.example.artifact;
+package com.example.artifact.Exception;
 
 public class EmployeeAlreadyAddedException extends RuntimeException{
     public EmployeeAlreadyAddedException(String message){
