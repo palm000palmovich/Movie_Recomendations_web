@@ -4,4 +4,5 @@ public class DataOfEnployeesIsEmpty extends RuntimeException{
     public DataOfEnployeesIsEmpty(String message){
         super(message);
     }
+
 }

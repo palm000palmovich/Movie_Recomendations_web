@@ -4,6 +4,7 @@ import com.example.artifact.Exception.DataOfEnployeesIsEmpty;
 import com.example.artifact.Exception.EmployeeAlreadyAddedException;
 import com.example.artifact.Exception.EmployeeIsNotInTheDataBase;
 import com.example.artifact.Exception.ThereIsNoSuchDepartment;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,10 +16,17 @@ public class EmployeeService{
 
     //Добавление сотрудника
     public String addEmployee(int id, String fio, int department, int salary) throws EmployeeAlreadyAddedException {
-        Employee newEmpl = new Employee(id , fio, department, salary);
-        if (!employees.contains(newEmpl)){employees.add(newEmpl);} else{
-            throw new EmployeeAlreadyAddedException("Этот сотрудник уже есть!");}
-        return "Сотрудник успешно добавлен!";
+        if (StringUtils.isNotEmpty(fio) && !fio.chars().anyMatch(Character::isDigit)){   //Если строка непустая и не имеет в записи цифры
+            String fio1 = StringUtils. capitalize(fio);  //Все ФИО начинаются с заглавной буквы
+
+
+            Employee newEmpl = new Employee(id, fio1, department, salary);
+            if (!employees.contains(newEmpl)){employees.add(newEmpl);} else{
+                throw new EmployeeAlreadyAddedException("Этот сотрудник уже есть!");}
+            return "Сотрудник успешно добавлен!";
+        } else{
+            throw new WrongFioException("Некорректная запись ФИО!");
+        }
     }
 
     //Все сотрудники
@@ -39,17 +47,22 @@ public class EmployeeService{
 
     //Удаление сотрудника
     public String removeEmployee(String fio1){
-        boolean flag = employees.stream()
-                .anyMatch(employee -> employee.getFio().equals(fio1));
+        if (StringUtils.isNotEmpty(fio1) && !fio1.chars().anyMatch(Character::isDigit)) {   //Если строка непустая и не имеет в записи цифры
+            String fio2 = StringUtils. capitalize(fio1);  //Все ФИО начинаются с заглавной буквы
+            boolean flag = employees.stream()
+                    .anyMatch(employee -> employee.getFio().equals(fio2));
 
-        if (flag == true){
-            List<Employee> updatedEmployees = employees.stream()
-                    .filter(e -> !e.getFio().equals(fio1))
-                    .collect(Collectors.toList());
-            this.employees = updatedEmployees;
-            return "Сотрудник удален!";
+            if (flag == true) {
+                List<Employee> updatedEmployees = employees.stream()
+                        .filter(e -> !e.getFio().equals(fio2))
+                        .collect(Collectors.toList());
+                this.employees = updatedEmployees;
+                return "Сотрудник удален!";
+            }
+            throw new EmployeeIsNotInTheDataBase("Такого сотрудника нет!");
+        }else{
+            throw new WrongFioException("Некорректная запись ФИО!");
         }
-        throw new EmployeeIsNotInTheDataBase("Такого сотрудника нет!");
     }
 
     //Сотрудники по номеру отдела
