@@ -5,4 +5,5 @@ public class PreferencesAreEmptyException extends RuntimeException{
         super(message);
     }
 
+
 }
