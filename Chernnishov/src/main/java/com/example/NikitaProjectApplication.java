@@ -9,4 +9,5 @@ public class NikitaProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NikitaProjectApplication.class, args);
 	}
+
 }
