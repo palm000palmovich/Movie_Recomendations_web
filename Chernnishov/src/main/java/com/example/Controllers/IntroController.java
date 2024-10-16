@@ -23,5 +23,4 @@ public class IntroController {
     public String intro(){
         return start.ptintIntro();
     }
-
 }

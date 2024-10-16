@@ -19,5 +19,4 @@ public class RecommendationsController {
     public String printRecs(){
         return us.recommendations().toString();
     }
-
 }

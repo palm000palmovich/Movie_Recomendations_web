@@ -28,5 +28,4 @@ public class UserController {
     public String printUs(){
         return user.printUser();
     }
-
 }
